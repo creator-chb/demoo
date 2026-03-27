@@ -1,0 +1,48 @@
+<view class="page">
+  <!-- 顶部图标和标题 -->
+  <view class="header">
+    <view class="logo">
+      <text class="logo-icon">🏪</text>
+    </view>
+    <text class="title">商家登录</text>
+    <text class="subtitle">管理您的店铺</text>
+  </view>
+
+  <!-- 登录表单 -->
+  <view class="form-card">
+    <view class="form-item">
+      <text class="form-label">用户名</text>
+      <input 
+        class="form-input" 
+        type="text" 
+        placeholder="请输入用户名"
+        model:value="{{username}}"
+        bind:input="onUsernameInput"
+      />
+    </view>
+    <view class="form-item">
+      <text class="form-label">密码</text>
+      <input 
+        class="form-input" 
+        type="text" 
+        password="{{true}}"
+        placeholder="请输入密码"
+        model:value="{{password}}"
+        bind:input="onPasswordInput"
+      />
+    </view>
+    <button 
+      class="login-btn {{loading ? 'loading' : ''}}" 
+      bindtap="handleLogin"
+      disabled="{{loading}}"
+    >
+      <text wx:if="{{loading}}">登录中...</text>
+      <text wx:else>登 录</text>
+    </button>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text class="tip-text">测试账号: admin / admin123</text>
+  </view>
+</view>

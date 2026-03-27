@@ -1,0 +1,83 @@
+<view class="page">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <text class="header-title">分类管理</text>
+    <view class="add-btn" bindtap="showAddModal">
+      <text class="add-icon">+</text>
+      <text>新增</text>
+    </view>
+  </view>
+
+  <!-- 分类列表 -->
+  <view class="category-list" wx:if="{{categories.length > 0}}">
+    <view class="category-item" wx:for="{{categories}}" wx:key="id">
+      <view class="category-info">
+        <text class="category-name">{{item.name}}</text>
+        <view class="category-meta">
+          <text class="meta-item">排序: {{item.sort_order}}</text>
+          <text class="status-tag {{item.status === 1 ? 'status-active' : 'status-inactive'}}">
+            {{item.status === 1 ? '启用' : '禁用'}}
+          </text>
+        </view>
+      </view>
+      <view class="category-actions">
+        <view class="action-btn edit-btn" data-item="{{item}}" bindtap="showEditModal">编辑</view>
+        <view class="action-btn delete-btn" data-id="{{item.id}}" bindtap="handleDelete">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">📂</text>
+    <text class="empty-text">暂无分类</text>
+    <text class="empty-tip">点击右上角"新增"添加分类</text>
+  </view>
+
+  <!-- 弹窗遮罩 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal"></view>
+
+  <!-- 编辑弹窗 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-header">
+      <text class="modal-title">{{editingId === 0 ? '新增分类' : '编辑分类'}}</text>
+      <view class="modal-close" bindtap="closeModal">×</view>
+    </view>
+    <view class="modal-body">
+      <view class="form-item">
+        <text class="form-label">分类名称</text>
+        <input 
+          class="form-input" 
+          placeholder="请输入分类名称"
+          model:value="{{formName}}"
+          bind:input="onNameInput"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">排序权重</text>
+        <input 
+          class="form-input" 
+          type="number"
+          placeholder="数字越大越靠前"
+          model:value="{{formSortOrder}}"
+          bind:input="onSortInput"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">状态</text>
+        <view class="switch-wrap">
+          <switch 
+            checked="{{formStatus === 1}}" 
+            bindchange="onStatusChange"
+            color="#1890ff"
+          />
+          <text class="switch-label">{{formStatus === 1 ? '启用' : '禁用'}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="closeModal">取消</button>
+      <button class="btn-save" bindtap="handleSave">保存</button>
+    </view>
+  </view>
+</view>

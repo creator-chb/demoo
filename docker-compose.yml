@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: order_system_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: order_system
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - order_network
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Node.js 后端服务
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: order_system_server
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: order_system
+      DB_USER: root
+      DB_PASSWORD: root123456
+      JWT_SECRET: your_jwt_secret_key_here_change_in_production
+      JWT_EXPIRES_IN: 7d
+      WECHAT_APPID: wx8a9ca553a1c1a57b
+      WECHAT_APPSECRET: d859e8d753d0fa70cfe89414849e622e
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads_data:/app/dist/uploads
+    networks:
+      - order_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+# 数据卷
+volumes:
+  mysql_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+# 网络
+networks:
+  order_network:
+    driver: bridge

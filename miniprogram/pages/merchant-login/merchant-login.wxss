@@ -1,0 +1,125 @@
+/* 商家登录页样式 */
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1890ff 0%, #096dd9 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 160rpx;
+}
+
+/* 头部区域 */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 80rpx;
+}
+
+.logo {
+  width: 140rpx;
+  height: 140rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30rpx;
+}
+
+.logo-icon {
+  font-size: 64rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 表单卡片 */
+.form-card {
+  width: 650rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx 50rpx;
+  box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.1);
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  border: none;
+  border-bottom: 2rpx solid #e8e8e8;
+  font-size: 32rpx;
+  color: #333;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-bottom-color: #1890ff;
+}
+
+/* 登录按钮 */
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #1890ff;
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 500;
+  border-radius: 48rpx;
+  border: none;
+  margin-top: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn:active {
+  background: #096dd9;
+}
+
+.login-btn.loading {
+  background: #91caff;
+}
+
+.login-btn[disabled] {
+  background: #91caff;
+  color: #fff;
+}
+
+/* 底部提示 */
+.footer-tip {
+  margin-top: 60rpx;
+  padding: 20rpx 40rpx;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 30rpx;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.9);
+}

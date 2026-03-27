@@ -1,0 +1,39 @@
+<view class="detail-page" wx:if="{{!loading}}">
+  <!-- 产品主图/轮播 -->
+  <swiper class="product-swiper" indicator-dots autoplay circular>
+    <swiper-item wx:if="{{product.image_url && (!product.images || product.images.length === 0)}}">
+      <image src="{{product.image_url}}" mode="aspectFill" class="swiper-img" bindtap="previewImage" data-src="{{product.image_url}}"/>
+    </swiper-item>
+    <block wx:if="{{product.images && product.images.length > 0}}">
+      <swiper-item wx:for="{{product.images}}" wx:key="*this">
+        <image src="{{item}}" mode="aspectFill" class="swiper-img" bindtap="previewImage" data-src="{{item}}"/>
+      </swiper-item>
+    </block>
+  </swiper>
+  
+  <!-- 产品信息 -->
+  <view class="product-info-section">
+    <text class="product-name">{{product.name}}</text>
+    <view class="product-category" wx:if="{{product.category}}">
+      <text class="category-tag">{{product.category.name}}</text>
+    </view>
+  </view>
+  
+  <!-- 产品描述 -->
+  <view class="product-desc-section" wx:if="{{product.description}}">
+    <text class="section-label">产品详情</text>
+    <text class="desc-text">{{product.description}}</text>
+  </view>
+  
+  <!-- 底部下单按钮 -->
+  <view class="bottom-bar">
+    <view class="order-btn {{ordering ? 'disabled' : ''}}" bindtap="handleOrder">
+      <text>{{ordering ? '下单中...' : '确认下单'}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-page" wx:if="{{loading}}">
+  <text>加载中...</text>
+</view>

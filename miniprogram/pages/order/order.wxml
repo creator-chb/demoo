@@ -1,0 +1,57 @@
+<view class="order-page">
+  <!-- 顶部安全区占位 -->
+  <view class="safe-area" style="height: {{statusBarHeight}}px;"></view>
+  
+  <!-- 顶部导航栏 -->
+  <view class="nav-bar" style="height: {{navBarHeight}}px;">
+    <text class="nav-title">点单</text>
+  </view>
+  
+  <!-- 顶部桌号栏 -->
+  <view class="table-bar">
+    <text class="table-text">当前桌号：{{tableId}}号桌</text>
+  </view>
+  
+  <!-- 主体区域：左侧分类 + 右侧产品 -->
+  <view class="main-content">
+    <!-- 左侧分类导航 -->
+    <scroll-view class="category-nav" scroll-y enhanced show-scrollbar="{{false}}">
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="id"
+        class="category-item {{currentCategoryId === item.id ? 'active' : ''}}"
+        bindtap="switchCategory"
+        data-id="{{item.id}}"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </scroll-view>
+    
+    <!-- 右侧产品列表 -->
+    <scroll-view class="product-list" scroll-y enhanced show-scrollbar="{{false}}">
+      <view wx:if="{{loading}}" class="loading-tip">
+        <text>加载中...</text>
+      </view>
+      <view wx:elif="{{products.length === 0}}" class="empty-tip">
+        <text>暂无产品</text>
+      </view>
+      <view wx:else class="product-grid">
+        <view 
+          wx:for="{{products}}" 
+          wx:key="id" 
+          class="product-card"
+          bindtap="goToDetail"
+          data-id="{{item.id}}"
+        >
+          <image class="product-img" src="{{item.image_url}}" mode="aspectFill"/>
+          <view class="product-info">
+            <text class="product-name">{{item.name}}</text>
+            <view class="product-btn">
+              <text>查看详情</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

@@ -1,0 +1,78 @@
+<view class="page">
+  <!-- 顶部批量生成区域 -->
+  <view class="header">
+    <view class="section-title">批量生成桌号码</view>
+    <view class="batch-section">
+      <view class="input-row">
+        <view class="input-group">
+          <text class="input-label">起始桌号</text>
+          <input 
+            class="form-input" 
+            type="number"
+            placeholder="如: 1"
+            value="{{startTable}}"
+            bindinput="onStartInput"
+          />
+        </view>
+        <text class="separator">至</text>
+        <view class="input-group">
+          <text class="input-label">结束桌号</text>
+          <input 
+            class="form-input" 
+            type="number"
+            placeholder="如: 10"
+            value="{{endTable}}"
+            bindinput="onEndInput"
+          />
+        </view>
+      </view>
+      <button class="btn-primary" bindtap="handleBatchGenerate">批量生成</button>
+    </view>
+
+    <!-- 单个生成 -->
+    <view class="single-section">
+      <view class="section-title">快速生成单个桌号</view>
+      <view class="single-row">
+        <input 
+          class="form-input single-input" 
+          type="number"
+          placeholder="输入桌号"
+          value="{{singleTable}}"
+          bindinput="onSingleInput"
+        />
+        <button class="btn-primary btn-small" bindtap="handleSingleGenerate">生成</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 桌号码列表 -->
+  <view class="list-section">
+    <view class="list-header">
+      <text class="list-title">已生成桌号码 ({{qrcodes.length}})</text>
+    </view>
+
+    <view class="qrcode-grid" wx:if="{{qrcodes.length > 0}}">
+      <view class="qrcode-item" wx:for="{{qrcodes}}" wx:key="id">
+        <view class="table-id">桌号 {{item.table_id}}</view>
+        <image 
+          class="qrcode-image" 
+          src="{{item.fullUrl}}"
+          mode="aspectFit"
+          bindtap="previewImage"
+          data-url="{{item.fullUrl}}"
+          bindlongpress="saveImage"
+          data-url="{{item.fullUrl}}"
+          show-menu-by-longpress
+        />
+        <text class="qrcode-tip">长按保存</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📱</text>
+      <text class="empty-text">暂无桌号码</text>
+      <text class="empty-tip">上方输入桌号生成小程序码</text>
+    </view>
+  </view>
+</view>

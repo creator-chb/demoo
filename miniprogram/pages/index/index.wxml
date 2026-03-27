@@ -1,28 +1,48 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+<!--index.wxml - 首页四宫格布局-->
+<view class="home-page">
+  <!-- 顶部安全区（自定义导航栏模式下需要） -->
+  <view class="safe-area" style="height: {{statusBarHeight}}px;"></view>
+  
+  <!-- 顶部标题区 -->
+  <view class="header">
+    <text class="shop-name">欢迎光临</text>
+    <text class="shop-desc">请选择您需要的服务</text>
+  </view>
+  
+  <!-- 四宫格区域 -->
+  <view class="grid-container">
+    <!-- 我要点单 -->
+    <view class="grid-item grid-order" bindtap="goToOrder">
+      <view class="grid-icon">🛒</view>
+      <text class="grid-title">我要点单</text>
+      <text class="grid-desc">浏览产品 快速下单</text>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    
+    <!-- 我是商家 -->
+    <view class="grid-item grid-merchant" bindtap="goToMerchant">
+      <view class="grid-icon">👨‍💼</view>
+      <text class="grid-title">我是商家</text>
+      <text class="grid-desc">商家管理入口</text>
+    </view>
+    
+    <!-- 二维码展示 -->
+    <view class="grid-item grid-qrcode">
+      <image wx:if="{{qrcodeUrl}}" src="{{qrcodeUrl}}" mode="aspectFit" class="qrcode-img"/>
+      <view wx:else class="grid-icon">📱</view>
+      <text class="grid-title">关注我们</text>
+      <text class="grid-desc">扫码关注公众号</text>
+    </view>
+    
+    <!-- 敬请期待 -->
+    <view class="grid-item grid-coming-soon">
+      <view class="grid-icon">🔮</view>
+      <text class="grid-title">敬请期待</text>
+      <text class="grid-desc">更多功能即将上线</text>
     </view>
   </view>
-</scroll-view>
+  
+  <!-- 底部桌号显示 -->
+  <view class="footer" wx:if="{{tableId}}">
+    <text class="footer-text">当前桌号：{{tableId}}号桌</text>
+  </view>
+</view>

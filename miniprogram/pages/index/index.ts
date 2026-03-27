@@ -1,54 +1,80 @@
-// index.ts
-// 获取应用实例
-const app = getApp<IAppOption>()
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+// index.ts - 首页四宫格布局
+import api from '../../utils/api'
+import config from '../../utils/config'
 
-Component({
+const app = getApp<IAppOption>()
+
+Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
-    },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    tableId: '',
+    qrcodeUrl: '',
+    statusBarHeight: 0,
+    navBarHeight: 44
   },
-  methods: {
-    // 事件处理函数
-    bindViewTap() {
-      wx.navigateTo({
-        url: '../logs/logs',
-      })
-    },
-    onChooseAvatar(e: any) {
-      const { avatarUrl } = e.detail
-      const { nickName } = this.data.userInfo
-      this.setData({
-        "userInfo.avatarUrl": avatarUrl,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    onInputChange(e: any) {
-      const nickName = e.detail.value
-      const { avatarUrl } = this.data.userInfo
-      this.setData({
-        "userInfo.nickName": nickName,
-        hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-      })
-    },
-    getUserProfile() {
-      // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-      wx.getUserProfile({
-        desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-          console.log(res)
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
+
+  onLoad(options: any) {
+    // 获取状态栏高度用于自定义导航栏
+    const systemInfo = wx.getWindowInfo()
+    this.setData({
+      statusBarHeight: systemInfo.statusBarHeight,
+      navBarHeight: 44
+    })
+
+    // 如果页面options有table_id，优先使用
+    if (options && options.table_id) {
+      app.globalData.tableId = options.table_id
+    }
+    
+    // 如果有scene参数（扫码进入）
+    if (options && options.scene) {
+      const scene = decodeURIComponent(options.scene)
+      // scene格式可能是 "table_id=3" 这样的
+      const params = scene.split('&')
+      params.forEach((param: string) => {
+        const [key, value] = param.split('=')
+        if (key === 'table_id') {
+          app.globalData.tableId = value
         }
       })
-    },
+    }
+    
+    this.setData({ tableId: app.globalData.tableId || '1' })
+    
+    // 加载二维码配置
+    this.loadQrCode()
   },
+
+  onShow() {
+    // 每次显示时更新tableId
+    const tableId = app.globalData.tableId || '1'
+    this.setData({ tableId })
+  },
+
+  // 加载二维码图片
+  async loadQrCode() {
+    try {
+      const res = await api.get(config.api.config + '/qrcode_image')
+      if (res.code === 0 && res.data && res.data.value) {
+        this.setData({ qrcodeUrl: res.data.value })
+      }
+    } catch (err) {
+      console.log('获取二维码配置失败', err)
+      // 获取失败时使用空值，显示占位图标
+    }
+  },
+
+  // 跳转到点单页面
+  goToOrder() {
+    const tableId = this.data.tableId || '1'
+    wx.navigateTo({
+      url: `/pages/order/order?table_id=${tableId}`
+    })
+  },
+
+  // 跳转到商家登录页
+  goToMerchant() {
+    wx.navigateTo({
+      url: '/pages/merchant-login/merchant-login'
+    })
+  }
 })

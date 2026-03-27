@@ -1,7 +1,15 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/order/order",
+    "pages/product-detail/product-detail",
+    "pages/my-orders/my-orders",
+    "pages/merchant-login/merchant-login",
+    "pages/merchant-admin/merchant-admin",
+    "pages/merchant-categories/merchant-categories",
+    "pages/merchant-products/merchant-products",
+    "pages/merchant-orders/merchant-orders",
+    "pages/merchant-qrcode/merchant-qrcode"
   ],
   "window": {
     "navigationBarTextStyle": "black",

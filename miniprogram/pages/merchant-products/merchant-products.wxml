@@ -1,0 +1,145 @@
+<view class="page">
+  <!-- 顶部分类筛选和新增按钮 -->
+  <view class="header">
+    <scroll-view class="category-tabs" scroll-x="true">
+      <view 
+        class="tab-item {{currentCategoryId === 0 ? 'active' : ''}}" 
+        data-id="{{0}}"
+        bindtap="switchCategory"
+      >全部</view>
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="id"
+        class="tab-item {{currentCategoryId === item.id ? 'active' : ''}}" 
+        data-id="{{item.id}}"
+        bindtap="switchCategory"
+      >{{item.name}}</view>
+    </scroll-view>
+    <view class="add-btn" bindtap="showAddModal">
+      <text class="add-icon">+</text>
+      <text>新增</text>
+    </view>
+  </view>
+
+  <!-- 产品列表 -->
+  <view class="product-list" wx:if="{{products.length > 0}}">
+    <view class="product-item" wx:for="{{products}}" wx:key="id">
+      <image 
+        class="product-image" 
+        src="{{item.image_url || 'https://via.placeholder.com/300'}}"
+        mode="aspectFill"
+      />
+      <view class="product-info">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-category">{{item.category && item.category.name || '未分类'}}</text>
+        <view class="product-meta">
+          <text class="status-tag {{item.status === 1 ? 'status-active' : 'status-inactive'}}">
+            {{item.status === 1 ? '已上架' : '已下架'}}
+          </text>
+          <text class="sort-text">排序: {{item.sort_order}}</text>
+        </view>
+      </view>
+      <view class="product-actions">
+        <view class="action-btn status-btn" data-item="{{item}}" bindtap="toggleStatus">
+          {{item.status === 1 ? '下架' : '上架'}}
+        </view>
+        <view class="action-btn edit-btn" data-item="{{item}}" bindtap="showEditModal">编辑</view>
+        <view class="action-btn delete-btn" data-id="{{item.id}}" bindtap="handleDelete">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">📦</text>
+    <text class="empty-text">暂无产品</text>
+    <text class="empty-tip">点击右上角"新增"添加产品</text>
+  </view>
+
+  <!-- 弹窗遮罩 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal"></view>
+
+  <!-- 编辑弹窗 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-header">
+      <text class="modal-title">{{editingId === 0 ? '新增产品' : '编辑产品'}}</text>
+      <view class="modal-close" bindtap="closeModal">×</view>
+    </view>
+    <view class="modal-body">
+      <!-- 图片上传 -->
+      <view class="form-item">
+        <text class="form-label">产品图片</text>
+        <view class="image-upload">
+          <view class="upload-area" bindtap="chooseImage" wx:if="{{!formImage}}">
+            <text class="upload-icon">+</text>
+            <text class="upload-text">上传图片</text>
+          </view>
+          <view class="image-preview" wx:else>
+            <image class="preview-img" src="{{formImage}}" mode="aspectFill" />
+            <view class="remove-btn" bindtap="removeImage">×</view>
+          </view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">产品名称</text>
+        <input 
+          class="form-input" 
+          placeholder="请输入产品名称"
+          model:value="{{formName}}"
+          bind:input="onNameInput"
+          maxlength="100"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">产品描述</text>
+        <input 
+          class="form-input form-input-desc" 
+          placeholder="请输入产品描述"
+          model:value="{{formDescription}}"
+          bind:input="onDescInput"
+          maxlength="500"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">所属分类</text>
+        <picker 
+          mode="selector" 
+          range="{{categories}}" 
+          range-key="name"
+          value="{{formCategoryIndex}}"
+          bindchange="onCategoryChange"
+        >
+          <view class="picker-value">
+            {{categories[formCategoryIndex].name || '请选择分类'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">排序权重</text>
+        <input 
+          class="form-input" 
+          type="number"
+          placeholder="数字越大越靠前"
+          model:value="{{formSortOrder}}"
+          bind:input="onSortInput"
+        />
+      </view>
+      <view class="form-item">
+        <text class="form-label">状态</text>
+        <view class="switch-wrap">
+          <switch 
+            checked="{{formStatus === 1}}" 
+            bindchange="onStatusChange"
+            color="#1890ff"
+          />
+          <text class="switch-label">{{formStatus === 1 ? '上架' : '下架'}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="btn-cancel" bindtap="closeModal">取消</button>
+      <button class="btn-save" bindtap="handleSave">保存</button>
+    </view>
+  </view>
+</view>
